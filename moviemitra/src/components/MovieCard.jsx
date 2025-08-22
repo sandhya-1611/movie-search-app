@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MovieCard = ({ movie }) => {
+  const navigate = useNavigate();
+  
   const {
     title = 'Movie Title',
     year = 'N/A',
@@ -9,14 +12,12 @@ const MovieCard = ({ movie }) => {
     type = 'movie'
   } = movie;
 
-
   const posterUrl = poster && poster !== 'N/A' 
     ? poster 
     : 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=No+Poster';
 
   const handleCardClick = () => {
-    console.log('Movie clicked:', movie);
-    
+    navigate(`/movie/${imdbID}`);
   };
 
   return (

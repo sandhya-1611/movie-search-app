@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMovieDetails } from '../services/movieApi';
+import { useFavoritesContext } from '../context/FavoritesContext';
 
 const MovieDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isFavorite, toggleFavorite } = useFavoritesContext();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const isMovieFavorite = movie ? isFavorite(movie.imdbID) : false;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -29,6 +33,19 @@ const MovieDetail = () => {
       fetchMovieDetails();
     }
   }, [id]);
+
+  const handleFavoriteToggle = () => {
+    if (movie) {
+      const movieForFavorites = {
+        Title: movie.Title,
+        Year: movie.Year,
+        imdbID: movie.imdbID,
+        Type: movie.Type,
+        Poster: movie.Poster
+      };
+      toggleFavorite(movieForFavorites);
+    }
+  };
 
   if (loading) {
     return (
@@ -88,7 +105,6 @@ const MovieDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto">
-
       <button 
         onClick={() => navigate(-1)}
         className="mb-6 flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors duration-200"
@@ -101,7 +117,6 @@ const MovieDetail = () => {
 
       <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
         <div className="md:flex">
-
           <div className="md:w-1/3">
             <img
               src={movie.Poster && movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/400x600/1f2937/9ca3af?text=No+Poster'}
@@ -111,9 +126,17 @@ const MovieDetail = () => {
           </div>
 
           <div className="md:w-2/3 p-6 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              {movie.Title}
-            </h1>
+            <div className="flex items-start justify-between mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
+                {movie.Title}
+              </h1>
+              
+              {isMovieFavorite && (
+                <span className="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm flex items-center">
+                  ❤️ Favorite
+                </span>
+              )}
+            </div>
 
             <div className="flex flex-wrap gap-4 mb-6">
               <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">
@@ -167,9 +190,20 @@ const MovieDetail = () => {
             </div>
 
             <div className="flex gap-4 mt-8">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                Add to Favorites
+              <button 
+                onClick={handleFavoriteToggle}
+                className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 ${
+                  isMovieFavorite
+                    ? 'bg-red-500 hover:bg-red-600 text-white'
+                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                }`}
+              >
+                <svg className="w-4 h-4" fill={isMovieFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span>{isMovieFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</span>
               </button>
+              
               <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-white/20">
                 Share Movie
               </button>

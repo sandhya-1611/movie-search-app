@@ -3,6 +3,11 @@ import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
 import MovieGrid from '../components/MovieGrid';
 import LoadingPlaceholder from '../components/LoadingPlaceholder';
+import { 
+  SearchErrorBoundary, 
+  MovieGridErrorBoundary, 
+  ComponentErrorBoundary 
+} from '../components/ErrorBoundaries';
 import { searchMovies } from '../services/movieApi';
 import { useDebounce } from '../hooks/useDebounce';
 
@@ -104,23 +109,41 @@ const Home = () => {
     setCurrentPage(1);
   };
 
+  const retrySearch = () => {
+    if (searchTerm.trim()) {
+      performSearch(searchTerm, 1);
+    }
+  };
+
+  const resetSearch = () => {
+    setSearchTerm('');
+    setMovies([]);
+    setError(null);
+    setHasSearched(false);
+    setTotalResults(0);
+  };
+
   const hasMore = movies.length < totalResults && movies.length > 0;
 
   return (
     <div className="min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-8">
         
-        <SearchBar 
-          onSearch={handleSearchChange}
-          placeholder="Search for movies, TV series, episodes..."
-          className="mb-6"
-        />
-        
-        <FilterBar 
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          onClearFilters={handleClearFilters}
-        />
+        <SearchErrorBoundary onRetry={resetSearch}>
+          <SearchBar 
+            onSearch={handleSearchChange}
+            placeholder="Search for movies, TV series, episodes..."
+            className="mb-6"
+          />
+        </SearchErrorBoundary>
+
+        <ComponentErrorBoundary componentName="FilterBar" onRetry={() => handleClearFilters()}>
+          <FilterBar 
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
+            onClearFilters={handleClearFilters}
+          />
+        </ComponentErrorBoundary>
 
         {hasSearched && !loading && (
           <div className="mb-6">
@@ -147,7 +170,9 @@ const Home = () => {
         )}
 
         {loading && movies.length === 0 && (
-          <LoadingPlaceholder count={8} />
+          <ComponentErrorBoundary componentName="LoadingPlaceholder">
+            <LoadingPlaceholder count={8} />
+          </ComponentErrorBoundary>
         )}
 
         {error && !loading && (
@@ -156,7 +181,7 @@ const Home = () => {
             <h2 className="text-2xl font-semibold text-white mb-4">Oops! Something went wrong</h2>
             <p className="text-gray-300 mb-8">{error}</p>
             <button
-              onClick={() => performSearch(searchTerm, 1)}
+              onClick={retrySearch}
               className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
             >
               Try Again
@@ -165,7 +190,7 @@ const Home = () => {
         )}
 
         {movies.length > 0 && (
-          <>
+          <MovieGridErrorBoundary onRetry={retrySearch}>
             <MovieGrid movies={movies} />
             
             {hasMore && (
@@ -181,11 +206,13 @@ const Home = () => {
             )}
 
             {loading && movies.length > 0 && (
-              <div className="mt-8">
-                <LoadingPlaceholder count={4} />
-              </div>
+              <ComponentErrorBoundary componentName="LoadingPlaceholder">
+                <div className="mt-8">
+                  <LoadingPlaceholder count={4} />
+                </div>
+              </ComponentErrorBoundary>
             )}
-          </>
+          </MovieGridErrorBoundary>
         )}
 
         {!hasSearched && !loading && (

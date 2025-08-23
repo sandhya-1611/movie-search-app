@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import MovieDetail from './pages/MovieDetail';
 import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
+import { MovieDetailErrorBoundary, ComponentErrorBoundary } from './components/ErrorBoundaries';
 
 function App() {
   return (
@@ -17,7 +18,14 @@ function App() {
           <main className="px-4 md:px-8 py-12">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/movie/:id" element={<MovieDetail />} />
+              <Route 
+                path="/movie/:id" 
+                element={
+                  <MovieDetailErrorBoundary>
+                    <MovieDetail />
+                  </MovieDetailErrorBoundary>
+                } 
+              />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -73,7 +73,8 @@ src/
 
     ⚙️ Setup Instructions
     1️⃣ Clone the repository
-      git clone https://github.com/your-username/moviemitra.git
+      git clone https://github.com/sandhya-1611/movie-search-app.git
+      cd movie-search-app
       cd moviemitra
 
     2️⃣ Install dependencies
@@ -83,7 +84,7 @@ src/
 
       Sign up at TMDB
 
-      Create a .env file in the root directory and add your API key:
+      Create a .env file in the moviemitra directory and add your API key:
 
       VITE_TMDB_API_KEY=your_api_key_here
 

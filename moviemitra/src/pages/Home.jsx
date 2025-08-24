@@ -10,6 +10,7 @@ import {
 } from "../components/ErrorBoundaries";
 import { searchMovies } from "../services/movieApi";
 import { useDebounce } from "../hooks/useDebounce";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -106,9 +107,17 @@ const Home = () => {
   };
 
   const handleSearchChange = (term) => {
-    setSearchTerm(term);
-    setCurrentPage(1);
-  };
+  setSearchTerm(term);
+  setCurrentPage(1);
+
+  if (!term.trim()) {
+    setMovies([]);
+    setError(null);
+    setHasSearched(false);
+    setTotalResults(0);
+  }
+};
+
 
   const retrySearch = () => {
     if (searchTerm.trim()) {
@@ -128,28 +137,30 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Hero Section with Search */}
       <div className="relative">
         <div className="max-w-4xl mx-auto px-4 pt-16 pb-8">
-          {/* Welcome Section - Only show when not searched */}
           {!hasSearched && !loading && (
             <div className="text-center mb-12">
               <div className="mb-8">
-                <div className="text-8xl mb-6 animate-pulse">🎬</div>
+                <div className="text-8xl text-base mb-6 animate-pulse"><Link to="/" className="flex items-center">
+                    <span className="text-base" style={{ marginRight: '4px' }}>🎬</span>
+                    <h1 className="text-xs font-bold tracking-wide font-sans text-white" style={{ marginRight: '18px' }}>
+                      Movie<span className="text-blue-500">Mitra</span>
+                    </h1>
+                  </Link></div>
                 <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
                   Discover Your Next
                 </h1>
                 <h2 className="text-4xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
                   Favorite Movie
                 </h2>
-                <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-xxl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
                   Search thousands of movies and TV shows, filter by your preferences, and save your favorites
                 </p>
               </div>
             </div>
           )}
 
-          {/* Search Section */}
           <div className="max-w-3xl mx-auto mb-8">
             <SearchErrorBoundary onRetry={resetSearch}>
               <div className="relative">
@@ -177,7 +188,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Features Section - Only show when not searched */}
         {!hasSearched && !loading && (
           <div className="max-w-4xl mx-auto px-4 pb-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
@@ -206,9 +216,8 @@ const Home = () => {
         )}
       </div>
 
-      {/* Results Section */}
       <div className="max-w-6xl mx-auto px-4 pb-16">
-        {hasSearched && !loading && (
+        {hasSearched && !loading && searchTerm.trim() !== "" && (
           <div className="mb-8 text-center">
             {totalResults > 0 ? (
               <p className="text-gray-300 text-lg">
@@ -228,7 +237,6 @@ const Home = () => {
                   No results found for{" "}
                   <span className="text-blue-400 font-semibold">"{searchTerm}"</span>
                 </p>
-                <p className="text-gray-500 mt-2">Try different keywords or adjust your filters</p>
               </div>
             )}
           </div>

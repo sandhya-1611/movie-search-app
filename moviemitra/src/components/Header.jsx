@@ -29,12 +29,12 @@ const Header = () => {
         </Link>
       </div>
 
-      <div className="md:hidden flex items-center justify-between" style={{ padding: '8px 12px' }}>
+      <div className="md:hidden flex items-center justify-between" style={{ padding: '22px 58px' }}>
         <nav className="flex items-center">
           <Link
             to="/"
             className="text-gray-300 hover:text-blue-400 transition font-medium text-xs flex items-center"
-            style={{ marginRight: '16px' }}
+            style={{ marginRight: '36px' }}
           >
             <span style={{ marginRight: '4px' }}>🏠</span>
             Home
@@ -48,12 +48,7 @@ const Header = () => {
           </Link>
         </nav>
 
-        <Link to="/" className="flex items-center">
-          <span className="text-base" style={{ marginRight: '4px' }}>🎬</span>
-          <h1 className="text-xs font-bold tracking-wide font-sans text-white" style={{ marginRight: '18px' }}>
-            Movie<span className="text-blue-500">Mitra</span>
-          </h1>
-        </Link>
+        
       </div>
 
       <div className="hidden sm:flex md:hidden items-center justify-between" style={{ padding: '14px 24px' }}>

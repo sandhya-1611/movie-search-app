@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const SearchBar = ({ onSearch, placeholder = "Search for movies..." }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   const handleInputChange = (e) => {
@@ -11,22 +11,44 @@ const SearchBar = ({ onSearch, placeholder = "Search for movies..." }) => {
   };
 
   const clearSearch = () => {
-    setSearchQuery('');
-    onSearch('');
+    setSearchQuery("");
+    onSearch(""); 
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto mb-8">
-      <div className={`relative flex items-center bg-white/10 backdrop-blur-md rounded-2xl border transition-all duration-300 ${
-        isFocused ? 'border-blue-400 shadow-lg shadow-blue-400/25 scale-105' : 'border-white/20'
-      }`}>
-
-        <div className="absolute left-4">
-          <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "2rem" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          width: "80%",
+          maxWidth: "800px",
+          padding: "16px 32px",
+          borderRadius: "16px",
+          backdropFilter: "blur(10px)",
+          border: "2px solid #60a5fa",
+          boxShadow: isFocused
+            ? "0 0 15px rgba(96,165,250,0.8)"
+            : "0 0 8px rgba(96,165,250,0.4)",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <div style={{ position: "absolute", left: "16px" }}>
+          <svg
+            style={{ height: "24px", width: "24px", color: "gray" }}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </div>
-
 
         <input
           type="text"
@@ -35,29 +57,39 @@ const SearchBar = ({ onSearch, placeholder = "Search for movies..." }) => {
           onChange={handleInputChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full pl-12 pr-12 py-4 bg-transparent text-white placeholder-gray-400 focus:outline-none text-lg rounded-2xl"
+          style={{
+            width: "100%",
+            background: "transparent",
+            border: "none",
+            outline: "none",
+            fontSize: "1.2rem",
+            color: "white",
+            paddingLeft: "40px",
+            paddingRight: "40px",
+            textAlign: "center",
+          }}
         />
 
         {searchQuery && (
           <button
             onClick={clearSearch}
-            className="absolute right-4 p-1 rounded-full hover:bg-white/10 transition-colors duration-200"
+            style={{
+              position: "absolute",
+              right: "16px",
+              fontSize: "1.2rem",
+              color: "#bbb",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <svg className="h-4 w-4 text-gray-400 hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            ✕
           </button>
         )}
       </div>
-
-
-      {searchQuery && (
-        <div className="mt-2 text-center">
-          <span className="text-sm text-gray-300">
-            Searching for "{searchQuery}"...
-          </span>
-        </div>
-      )}
     </div>
   );
 };

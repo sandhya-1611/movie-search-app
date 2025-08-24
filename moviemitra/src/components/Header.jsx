@@ -1,32 +1,84 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="w-full px-4 md:px-8 py-6 bg-black/20 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-
-        <Link to="/" className="flex items-center space-x-3">
-          <span className="text-3xl">🎬</span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
-            Movie<span className="text-blue-400">Mitra</span>
-          </h1>
-        </Link>
-
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-gray-300 hover:text-white transition-colors duration-200">
+    <header className="w-full bg-black/30 backdrop-blur-md shadow-md">
+      <div className="hidden md:flex items-center justify-between" style={{ padding: '16px 32px' }}>
+        <nav className="flex items-center">
+          <Link
+            to="/"
+            className="text-gray-300 hover:text-blue-400 transition font-medium"
+            style={{ marginRight: '48px' }}
+          >
             Home
           </Link>
-          <Link to="/favorites" className="text-gray-300 hover:text-white transition-colors duration-200">
+          <Link
+            to="/favorites"
+            className="text-gray-300 hover:text-blue-400 transition font-medium"
+          >
             Favorites
           </Link>
         </nav>
 
-        <button className="md:hidden text-white">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <Link to="/" className="flex items-center">
+          <span className="text-4xl" style={{ marginRight: '12px' }}>🎬</span>
+          <h1 className="text-3xl font-extrabold tracking-wide font-sans text-white">
+            Movie<span className="text-blue-500">Mitra</span>
+          </h1>
+        </Link>
+      </div>
+
+      <div className="md:hidden flex items-center justify-between" style={{ padding: '8px 12px' }}>
+        <nav className="flex items-center">
+          <Link
+            to="/"
+            className="text-gray-300 hover:text-blue-400 transition font-medium text-xs flex items-center"
+            style={{ marginRight: '16px' }}
+          >
+            <span style={{ marginRight: '4px' }}>🏠</span>
+            Home
+          </Link>
+          <Link
+            to="/favorites"
+            className="text-gray-300 hover:text-blue-400 transition font-medium text-xs flex items-center"
+          >
+            <span style={{ marginRight: '4px' }}>❤️</span>
+            Fav
+          </Link>
+        </nav>
+
+        <Link to="/" className="flex items-center">
+          <span className="text-base" style={{ marginRight: '4px' }}>🎬</span>
+          <h1 className="text-xs font-bold tracking-wide font-sans text-white" style={{ marginRight: '18px' }}>
+            Movie<span className="text-blue-500">Mitra</span>
+          </h1>
+        </Link>
+      </div>
+
+      <div className="hidden sm:flex md:hidden items-center justify-between" style={{ padding: '14px 24px' }}>
+        <nav className="flex items-center">
+          <Link
+            to="/"
+            className="text-gray-300 hover:text-blue-400 transition font-medium"
+            style={{ marginRight: '32px' }}
+          >
+            Home
+          </Link>
+          <Link
+            to="/favorites"
+            className="text-gray-300 hover:text-blue-400 transition font-medium"
+          >
+            Favorites
+          </Link>
+        </nav>
+
+        <Link to="/" className="flex items-center">
+          <span className="text-3xl" style={{ marginRight: '10px' }}>🎬</span>
+          <h1 className="text-2xl font-extrabold tracking-wide font-sans text-white">
+            Movie<span className="text-blue-500">Mitra</span>
+          </h1>
+        </Link>
       </div>
     </header>
   );

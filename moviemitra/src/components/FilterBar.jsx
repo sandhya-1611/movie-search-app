@@ -1,195 +1,122 @@
-import React, { useState } from 'react';
+import React from "react";
 
-const FilterBar = ({ filters, onFiltersChange, onClearFilters }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const currentYear = new Date().getFullYear();
-  const years = [];
-  for (let year = currentYear; year >= 1900; year--) {
-    years.push(year);
-  }
-
-  const handleFilterChange = (filterType, value) => {
-    const newFilters = {
-      ...filters,
-      [filterType]: value
-    };
-    onFiltersChange(newFilters);
+export default function FilterBar({ filters, onFiltersChange, onClearFilters }) {
+  const dropdownStyle = {
+    padding: "10px 14px",
+    borderRadius: "10px",
+    border: "1px solid #4b5563", 
+    backgroundColor: "#0d1117",
+    color: "#e0e7ff", 
+    fontWeight: "500",
+    outline: "none",
+    cursor: "pointer",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+    transition: "all 0.2s ease-in-out",
   };
 
-  const handleClearFilters = () => {
-    onClearFilters();
-    setIsExpanded(false);
+  const dropdownHoverFocus = {
+    backgroundColor: "#111827",
+    borderColor: "#8b5cf6", 
+    boxShadow: "0 4px 12px rgba(139,92,246,0.5)",
   };
 
-  const hasActiveFilters = Object.values(filters).some(value => 
-    value && value !== '' && value !== 'all'
-  );
+  const buttonStyle = {
+    padding: "10px 24px",
+    borderRadius: "20px",
+    background: "linear-gradient(90deg, #ec4899, #8b5cf6)", 
+    color: "#fff",
+    fontWeight: "600",
+    border: "none",
+    cursor: "pointer",
+    boxShadow: "0 4px 15px rgba(236,72,153,0.5)",
+    transition: "all 0.2s ease-in-out",
+  };
+
+  const buttonHover = {
+    transform: "scale(1.05)",
+    boxShadow: "0 6px 20px rgba(236,72,153,0.7)",
+  };
 
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 mb-6">
-      <div className="p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center space-x-2 text-white hover:text-blue-300 transition-colors duration-200"
-          >
-            <svg 
-              className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="font-medium">Filters</span>
-          </button>
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto 32px auto",
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "12px",
+        padding: "12px",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#0b1220",
+        borderRadius: "14px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+      }}
+    >
 
-          {hasActiveFilters && (
-            <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm">
-              {Object.values(filters).filter(value => value && value !== '' && value !== 'all').length} active
-            </span>
-          )}
-        </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", flex: 1 }}>
+        <select
+          value={filters.type}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, type: e.target.value })
+          }
+          style={dropdownStyle}
+          onMouseOver={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onMouseOut={(e) => Object.assign(e.target.style, dropdownStyle)}
+          onFocus={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onBlur={(e) => Object.assign(e.target.style, dropdownStyle)}
+        >
+          <option value="all">All Types</option>
+          <option value="movie">Movies</option>
+          <option value="series">Series</option>
+        </select>
 
-        {hasActiveFilters && (
-          <button
-            onClick={handleClearFilters}
-            className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors duration-200"
-          >
-            Clear All
-          </button>
-        )}
+        <select
+          value={filters.ratings || ""}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, ratings: e.target.value })
+          }
+          style={{ ...dropdownStyle, color: "#fde68a" }} 
+          onMouseOver={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onMouseOut={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })}
+          onFocus={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onBlur={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })}
+        >
+          <option value="">All Ratings</option>
+          <option value="9">9+ ⭐</option>
+          <option value="8">8+ ⭐</option>
+          <option value="7">7+ ⭐</option>
+          <option value="6">6+ ⭐</option>
+          <option value="5">5+ ⭐</option>
+          <option value="4">4+ ⭐</option>
+          <option value="3">3+ ⭐</option>
+        </select>
+
+        <select
+          value={filters.sortBy}
+          onChange={(e) =>
+            onFiltersChange({ ...filters, sortBy: e.target.value })
+          }
+          style={{ ...dropdownStyle, color: "#a5b4fc" }} 
+          onMouseOver={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onMouseOut={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#a5b4fc" })}
+          onFocus={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+          onBlur={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#a5b4fc" })}
+        >
+          <option value="relevance">Relevance</option>
+          <option value="yearAsc">Year Ascending</option>
+          <option value="yearDesc">Year Descending</option>
+        </select>
       </div>
 
-      {isExpanded && (
-        <div className="px-4 pb-4 border-t border-white/10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Type
-              </label>
-              <select
-                value={filters.type || 'all'}
-                onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Types</option>
-                <option value="movie">Movies</option>
-                <option value="series">TV Series</option>
-                <option value="episode">Episodes</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                From Year
-              </label>
-              <select
-                value={filters.yearFrom || ''}
-                onChange={(e) => handleFilterChange('yearFrom', e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Any Year</option>
-                {years.map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                To Year
-              </label>
-              <select
-                value={filters.yearTo || ''}
-                onChange={(e) => handleFilterChange('yearTo', e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Any Year</option>
-                {years.map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Sort By
-              </label>
-              <select
-                value={filters.sortBy || 'relevance'}
-                onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="relevance">Relevance</option>
-                <option value="year_desc">Year (Newest)</option>
-                <option value="year_asc">Year (Oldest)</option>
-                <option value="title">Title (A-Z)</option>
-              </select>
-            </div>
-          </div>
-
-          {hasActiveFilters && (
-            <div className="mt-4 pt-4 border-t border-white/10">
-              <div className="flex flex-wrap gap-2">
-                <span className="text-sm text-gray-300">Active filters:</span>
-                
-                {filters.type && filters.type !== 'all' && (
-                  <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-sm flex items-center">
-                    Type: {filters.type}
-                    <button
-                      onClick={() => handleFilterChange('type', 'all')}
-                      className="ml-2 text-blue-300 hover:text-white"
-                    >
-                      ×
-                    </button>
-                  </span>
-                )}
-
-                {filters.yearFrom && (
-                  <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm flex items-center">
-                    From: {filters.yearFrom}
-                    <button
-                      onClick={() => handleFilterChange('yearFrom', '')}
-                      className="ml-2 text-green-300 hover:text-white"
-                    >
-                      ×
-                    </button>
-                  </span>
-                )}
-
-                {filters.yearTo && (
-                  <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm flex items-center">
-                    To: {filters.yearTo}
-                    <button
-                      onClick={() => handleFilterChange('yearTo', '')}
-                      className="ml-2 text-green-300 hover:text-white"
-                    >
-                      ×
-                    </button>
-                  </span>
-                )}
-
-                {filters.sortBy && filters.sortBy !== 'relevance' && (
-                  <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-sm flex items-center">
-                    Sort: {filters.sortBy.replace('_', ' ')}
-                    <button
-                      onClick={() => handleFilterChange('sortBy', 'relevance')}
-                      className="ml-2 text-purple-300 hover:text-white"
-                    >
-                      ×
-                    </button>
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      <button
+        onClick={onClearFilters}
+        style={buttonStyle}
+        onMouseOver={(e) => Object.assign(e.target.style, buttonHover)}
+        onMouseOut={(e) => Object.assign(e.target.style, buttonStyle)}
+      >
+        Clear All
+      </button>
     </div>
   );
-};
-
-export default FilterBar;
+}

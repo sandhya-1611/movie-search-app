@@ -11,6 +11,8 @@ import {
 import { searchMovies } from "../services/movieApi";
 import { useDebounce } from "../hooks/useDebounce";
 import { Link } from "react-router-dom";
+import Features from "../components/Features";
+import { Search, Filter, Heart, Smartphone } from "react-feather"; 
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,44 +33,62 @@ const Home = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const performSearch = useCallback(
-    async (term, page = 1, currentFilters = filters) => {
-      if (!term?.trim()) {
-        setMovies([]);
-        setTotalResults(0);
-        setHasSearched(false);
-        return;
-      }
+  async (term, page = 1, currentFilters = filters) => {
+    if (!term?.trim()) {
+      setMovies([]);
+      setTotalResults(0);
+      setHasSearched(false);
+      return;
+    }
 
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      try {
-        const result = await searchMovies(term, page, currentFilters);
+    try {
+      let result = await searchMovies(term, page, currentFilters);
 
-        if (result.success) {
-          setMovies((prev) =>
-            page === 1 ? result.movies : [...prev, ...result.movies]
-          );
-          setTotalResults(result.totalResults);
-          setCurrentPage(page);
-          setHasSearched(true);
-        } else {
-          setMovies([]);
-          setError(result.error);
-          setTotalResults(0);
-          setHasSearched(true);
+      if (result.success) {
+        let fetchedMovies = result.movies;
+
+        if (currentFilters.ratings) {
+  const ratingValue = parseInt(currentFilters.ratings);
+  fetchedMovies = fetchedMovies.filter((movie) => {
+    const rating = parseFloat(movie.imdbRating);
+    return isNaN(rating) || rating >= ratingValue;
+
+  });
+}
+
+        if (currentFilters.sortBy === "yearAsc") {
+          fetchedMovies.sort((a, b) => parseInt(a.Year) - parseInt(b.Year));
+        } else if (currentFilters.sortBy === "yearDesc") {
+          fetchedMovies.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
         }
-      } catch (err) {
-        console.error("Search error:", err);
-        setError("Something went wrong. Please try again.");
+
+        setMovies((prev) =>
+          page === 1 ? fetchedMovies : [...prev, ...fetchedMovies]
+        );
+        setTotalResults(result.totalResults);
+        setCurrentPage(page);
+        setHasSearched(true);
+      } else {
         setMovies([]);
+        setError(result.error);
         setTotalResults(0);
-      } finally {
-        setLoading(false);
+        setHasSearched(true);
       }
-    },
-    [filters]
-  );
+    } catch (err) {
+      console.error("Search error:", err);
+      setError("Something went wrong. Please try again.");
+      setMovies([]);
+      setTotalResults(0);
+    } finally {
+      setLoading(false);
+    }
+  },
+  [filters]
+);
+
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -107,17 +127,16 @@ const Home = () => {
   };
 
   const handleSearchChange = (term) => {
-  setSearchTerm(term);
-  setCurrentPage(1);
+    setSearchTerm(term);
+    setCurrentPage(1);
 
-  if (!term.trim()) {
-    setMovies([]);
-    setError(null);
-    setHasSearched(false);
-    setTotalResults(0);
-  }
-};
-
+    if (!term.trim()) {
+      setMovies([]);
+      setError(null);
+      setHasSearched(false);
+      setTotalResults(0);
+    }
+  };
 
   const retrySearch = () => {
     if (searchTerm.trim()) {
@@ -136,85 +155,173 @@ const Home = () => {
   const hasMore = movies.length < totalResults && movies.length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="relative">
-        <div className="max-w-4xl mx-auto px-4 pt-16 pb-8">
-          {!hasSearched && !loading && (
-            <div className="text-center mb-12">
-              <div className="mb-8">
-                <div className="text-8xl text-base mb-6 animate-pulse"><Link to="/" className="flex items-center">
-                    <span className="text-base" style={{ marginRight: '4px' }}>🎬</span>
-                    <h1 className="text-xs font-bold tracking-wide font-sans text-white" style={{ marginRight: '18px' }}>
-                      Movie<span className="text-blue-500">Mitra</span>
-                    </h1>
-                  </Link></div>
-                <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                  Discover Your Next
-                </h1>
-                <h2 className="text-4xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
-                  Favorite Movie
-                </h2>
-                <p className="text-xxl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
-                  Search thousands of movies and TV shows, filter by your preferences, and save your favorites
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className="max-w-3xl mx-auto mb-8">
-            <SearchErrorBoundary onRetry={resetSearch}>
-              <div className="relative">
-                <SearchBar
-                  onSearch={handleSearchChange}
-                  placeholder="Search for movies, TV series, episodes..."
-                  className="w-full"
-                />
-              </div>
-            </SearchErrorBoundary>
-          </div>
-
-          {/* Filter Section */}
-          <div className="max-w-4xl mx-auto">
-            <ComponentErrorBoundary
-              componentName="FilterBar"
-              onRetry={handleClearFilters}
-            >
-              <FilterBar
-                filters={filters}
-                onFiltersChange={handleFiltersChange}
-                onClearFilters={handleClearFilters}
-              />
-            </ComponentErrorBoundary>
-          </div>
-        </div>
-
+    <main
+      style={{
+        width: "100%",
+        background: "linear-gradient(135deg, #0b1220 0%, #0f172a 50%, #0b1220 100%)",
+        backgroundAttachment: "fixed",
+      }}
+    >
+      <div className="max-w-4xl mx-auto px-4 pt-16 pb-8">
         {!hasSearched && !loading && (
-          <div className="max-w-4xl mx-auto px-4 pb-16">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-              <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                <div className="text-4xl mb-4">🔍</div>
-                <h3 className="text-lg font-semibold text-white mb-2">Smart Search</h3>
-                <p className="text-gray-400 text-sm">Find any movie or TV show instantly</p>
+          <div className="text-center mb-12">
+            <div className="mb-8">
+              <div className="flex flex-col items-center justify-center mb-12">
+                <Link to="/" className="flex items-center space-x-2 animate-pulse">
+                  <span className="text-5xl">🎬</span>
+                  <h1 className="text-4xl md:text-5xl font-extrabold tracking-wide font-sans text-white">
+                    Movie<span className="text-blue-500">Mitra</span>
+                  </h1>
+                </Link>
               </div>
-              <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                <div className="text-4xl mb-4">⚡</div>
-                <h3 className="text-lg font-semibold text-white mb-2">Advanced Filters</h3>
-                <p className="text-gray-400 text-sm">Filter by type, year, and more</p>
-              </div>
-              <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                <div className="text-4xl mb-4">❤️</div>
-                <h3 className="text-lg font-semibold text-white mb-2">Save Favorites</h3>
-                <p className="text-gray-400 text-sm">Keep track of your favorite content</p>
-              </div>
-              <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-                <div className="text-4xl mb-4">📱</div>
-                <h3 className="text-lg font-semibold text-white mb-2">Responsive</h3>
-                <p className="text-gray-400 text-sm">Perfect on any device</p>
-              </div>
+              <h1
+                className="text-5xl md:text-6xl font-extrabold mb-6"
+                style={{ color: "#C0A1D9" }}
+              >
+                Discover Your Next
+              </h1>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
+                Favorite Movie
+              </h2>
+              <p
+                className="text-xxl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
+                style={{ color: "#E9D8FD" }}
+              >
+                Search thousands of movies and TV shows, filter by your
+                preferences, and save your favorites
+              </p>
             </div>
           </div>
         )}
+
+        <div className="max-w-3xl mx-auto mb-8">
+          <SearchErrorBoundary onRetry={resetSearch}>
+            <div className="relative">
+              <SearchBar
+                onSearch={handleSearchChange}
+                placeholder="Search for movies, TV series, episodes..."
+                className="w-full"
+              />
+            </div>
+          </SearchErrorBoundary>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <ComponentErrorBoundary
+            componentName="FilterBar"
+            onRetry={handleClearFilters}
+          >
+            <FilterBar
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onClearFilters={handleClearFilters}
+            />
+          </ComponentErrorBoundary>
+        </div>
       </div>
+
+{!hasSearched && !loading && (
+  <section
+    style={{
+      width: "100%",
+      paddingTop: "1rem",   
+      paddingBottom: "60rem", 
+    }}
+  >
+    <div className="max-w-6xl mx-auto px-6">
+      <h2
+        className="text-center text-3xl font-bold mb-12"
+        style={{
+          background: "linear-gradient(90deg, #a78bfa, #f0abfc)",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
+      >
+        ✨ Why Choose MovieMitra
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 place-items-center" style={{
+      width: "100%",
+      paddingTop: "1rem",  
+      paddingBottom: "60rem", 
+    }}>
+
+        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-pink-500 
+                        shadow-[0_0_12px_rgba(236,72,153,0.7)] 
+                        p-6 flex flex-col items-center text-center 
+                        transition-all duration-300 
+                        hover:scale-[1.05] 
+                        hover:shadow-[0_0_25px_rgba(236,72,153,1)]" style={{
+            paddingTop: "1rem", 
+            paddingBottom: "1rem",
+          }}>
+          <div className="mb-4">
+            <Search size={40} className="text-pink-500" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-white">Smart Search</h3>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Find any movie or TV show instantly with our powerful search engine and comprehensive database.
+          </p>
+        </div>
+
+        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-cyan-500 
+                        shadow-[0_0_12px_rgba(34,211,238,0.7)] 
+                        p-6 flex flex-col items-center text-center 
+                        transition-all duration-300 
+                        hover:scale-[1.05] 
+                        hover:shadow-[0_0_25px_rgba(34,211,238,1)]"style={{
+            paddingTop: "1rem", 
+            paddingBottom: "1rem",
+          }}>
+          <div className="mb-4">
+            <Filter size={40} className="text-cyan-500" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-white">Advanced Filters</h3>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Filter by type, year, genre, and rating to discover exactly what you're looking for.
+          </p>
+        </div>
+
+        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-rose-500 
+                        shadow-[0_0_12px_rgba(244,63,94,0.7)] 
+                        p-6 flex flex-col items-center text-center 
+                        transition-all duration-300 
+                        hover:scale-[1.05] 
+                        hover:shadow-[0_0_25px_rgba(244,63,94,1)]" style={{
+            paddingTop: "1rem", 
+            paddingBottom: "1rem",
+          }}>
+          <div className="mb-4">
+            <Heart size={40} className="text-rose-500" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-white">Save Favorites</h3>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Create your personal watchlist and keep track of your favorite movies and shows.
+          </p>
+        </div>
+
+        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-emerald-500 
+                        shadow-[0_0_12px_rgba(16,185,129,0.7)] 
+                        p-6 flex flex-col items-center text-center 
+                        transition-all duration-300 
+                        hover:scale-[1.05] 
+                        hover:shadow-[0_0_25px_rgba(16,185,129,1)]" style={{
+            paddingTop: "1rem", 
+            paddingBottom: "1rem",
+          }}>
+          <div className="mb-4">
+            <Smartphone size={40} className="text-emerald-500" />
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-white">Responsive Design</h3>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Seamless experience across all devices - desktop, tablet, and mobile platforms.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
 
       <div className="max-w-6xl mx-auto px-4 pb-16">
         {hasSearched && !loading && searchTerm.trim() !== "" && (
@@ -235,7 +342,9 @@ const Home = () => {
                 <div className="text-6xl mb-4">🔍</div>
                 <p className="text-gray-400 text-xl">
                   No results found for{" "}
-                  <span className="text-blue-400 font-semibold">"{searchTerm}"</span>
+                  <span className="text-blue-400 font-semibold">
+                    "{searchTerm}"
+                  </span>
                 </p>
               </div>
             )}
@@ -292,7 +401,7 @@ const Home = () => {
           </MovieGridErrorBoundary>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 

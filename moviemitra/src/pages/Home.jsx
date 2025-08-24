@@ -168,7 +168,7 @@ const Home = () => {
             <div className="mb-8">
               <div className="flex flex-col items-center justify-center mb-12">
                 <Link to="/" className="flex items-center space-x-2 animate-pulse">
-                  <span className="text-5xl">🎬</span>
+                  <span className="text-9xl">🎬</span>
                   <h1 className="text-4xl md:text-5xl font-extrabold tracking-wide font-sans text-white">
                     Movie<span className="text-blue-500">Mitra</span>
                   </h1>

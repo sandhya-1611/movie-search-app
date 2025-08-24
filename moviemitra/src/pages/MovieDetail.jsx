@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMovieDetails } from '../services/movieApi';
 import { useFavoritesContext } from '../context/FavoritesContext';
@@ -29,9 +29,7 @@ const MovieDetail = () => {
       setLoading(false);
     };
 
-    if (id) {
-      fetchMovieDetails();
-    }
+    if (id) fetchMovieDetails();
   }, [id]);
 
   const handleFavoriteToggle = () => {
@@ -49,165 +47,181 @@ const MovieDetail = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden animate-pulse">
-          <div className="md:flex">
-            <div className="md:w-1/3 h-96 md:h-auto bg-gray-600"></div>
-            <div className="md:w-2/3 p-6 md:p-8 space-y-4">
-              <div className="h-8 bg-gray-600 rounded w-3/4"></div>
-              <div className="flex gap-4">
-                <div className="h-6 bg-gray-600 rounded w-16"></div>
-                <div className="h-6 bg-gray-600 rounded w-16"></div>
-                <div className="h-6 bg-gray-600 rounded w-20"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-600 rounded"></div>
-                <div className="h-4 bg-gray-600 rounded w-5/6"></div>
-                <div className="h-4 bg-gray-600 rounded w-4/6"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto py-16 px-6">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden animate-pulse h-96 md:h-[600px]"></div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !movie) {
     return (
-      <div className="max-w-6xl mx-auto text-center py-16">
+      <div className="max-w-7xl mx-auto text-center py-16 px-6">
         <div className="text-6xl mb-4">❌</div>
-        <h2 className="text-2xl font-semibold text-white mb-4">Error Loading Movie</h2>
-        <p className="text-gray-300 mb-8">{error}</p>
+        <h2 className="text-3xl font-bold text-white mb-6">Movie Not Found</h2>
         <button
-          onClick={() => navigate(-1)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
+          onClick={() => {
+            if (window.history.length > 2) {
+              navigate(-1);
+            } else {
+              navigate('/search'); 
+            }
+          }}
+          className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl shadow-lg hover:scale-105 transition-all duration-300 font-semibold"
         >
-          Go Back
-        </button>
-      </div>
-    );
-  }
-
-  if (!movie) {
-    return (
-      <div className="max-w-6xl mx-auto text-center py-16">
-        <div className="text-6xl mb-4">🔍</div>
-        <h2 className="text-2xl font-semibold text-white mb-4">Movie Not Found</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
-        >
-          Go Back
+          Back to Search
         </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <button 
-        onClick={() => navigate(-1)}
-        className="mb-6 flex items-center space-x-2 text-blue-400 hover:text-blue-300 transition-colors duration-200"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back to Search</span>
-      </button>
+    <div
+      style={{
+        minHeight: '100vh',
+        width: '100%',
+        background: 'linear-gradient(135deg, #0b1220 0%, #0f172a 50%, #0b1220 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem 1rem',
+      }}
+    >
+      <div className="max-w-7xl w-full flex flex-col items-center">
+        <div>
+          <button
+            onClick={() => {
+              if (window.history.length > 2) {
+                navigate(-1);
+              } else {
+                navigate('/search'); 
+              }
+            }}
+            style={{
+              padding: '12px 28px',
+              borderRadius: '20px',
+              background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+              color: '#fff',
+              fontWeight: '600',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(59,130,246,0.5)',
+              transition: 'all 0.2s ease-in-out',
+            }}
+          >
+            Back to Search
+          </button>
+        </div>
 
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
-        <div className="md:flex">
-          <div className="md:w-1/3">
-            <img
-              src={movie.Poster && movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/400x600/1f2937/9ca3af?text=No+Poster'}
-              alt={movie.Title}
-              className="w-full h-full object-cover"
-            />
+        <h1
+          className="text-3xl lg:text-4xl font-bold text-white text-center"
+          style={{ marginTop: '2rem', marginBottom: '2rem' }}
+        >
+          {movie.Title}
+        </h1>
+
+        <div
+          className="bg-white/5 backdrop-blur-md rounded-2xl p-8 shadow-2xl w-full"
+          style={{ maxWidth: '1000px' }}
+        >
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
+
+            <div className="w-full lg:w-auto flex justify-center lg:justify-start flex-shrink-0">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-xl">
+                <img
+                  src={
+                    movie.Poster && movie.Poster !== 'N/A'
+                      ? movie.Poster
+                      : 'https://via.placeholder.com/300x450/1f2937/9ca3af?text=No+Poster'
+                  }
+                  alt={movie.Title}
+                  className="w-full h-auto rounded-lg object-cover shadow-lg"
+                  style={{ width: '300px', maxHeight: '450px' }}
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 flex flex-col justify-start space-y-6">
+              
+              {movie.Plot && movie.Plot !== 'N/A' && (
+                <p className="text-gray-300 text-base leading-relaxed">{movie.Plot}</p>
+              )}
+
+              <div className="space-y-3">
+                {movie.Year && (
+                  <div>
+                    <span className="text-white font-extrabold">Date Released: </span>
+                    <span className="text-white">{movie.Released || movie.Year}</span>
+                  </div>
+                )}
+                {movie.imdbRating && movie.imdbRating !== 'N/A' && (
+                  <div>
+                    <span className="text-white font-extrabold">Rating: </span>
+                    <span className="text-white">{movie.imdbRating}</span>
+                    {movie.imdbVotes && movie.imdbVotes !== 'N/A' && (
+                      <span className="text-gray-400 text-sm ml-2">({movie.imdbVotes} votes)</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                {movie.Genre && (
+                  <div>
+                    <span className="text-white font-extrabold">Genre: </span>
+                    <span className="text-white">{movie.Genre}</span>
+                  </div>
+                )}
+                {movie.Runtime && (
+                  <div>
+                    <span className="text-white font-extrabold">Runtime: </span>
+                    <span className="text-white">{movie.Runtime}</span>
+                  </div>
+                )}
+                {movie.Rated && (
+                  <div>
+                    <span className="text-white font-extrabold">Rated: </span>
+                    <span className="text-white">{movie.Rated}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                {movie.Director && (
+                  <div>
+                    <span className="text-white font-extrabold">Director: </span>
+                    <span className="text-white">{movie.Director}</span>
+                  </div>
+                )}
+                {movie.Actors && (
+                  <div>
+                    <span className="text-white font-extrabold">Cast: </span>
+                    <span className="text-white">{movie.Actors}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="md:w-2/3 p-6 md:p-8">
-            <div className="flex items-start justify-between mb-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-white">
-                {movie.Title}
-              </h1>
-              
-              {isMovieFavorite && (
-                <span className="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm flex items-center">
-                  ❤️ Favorite
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-4 mb-6">
-              <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-sm">
-                {movie.Year}
-              </span>
-              {movie.Rated && movie.Rated !== 'N/A' && (
-                <span className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm">
-                  {movie.Rated}
-                </span>
-              )}
-              {movie.Runtime && movie.Runtime !== 'N/A' && (
-                <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">
-                  {movie.Runtime}
-                </span>
-              )}
-              {movie.imdbRating && movie.imdbRating !== 'N/A' && (
-                <span className="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm">
-                  ⭐ {movie.imdbRating}
-                </span>
-              )}
-            </div>
-
-            <div className="space-y-4">
-              {movie.Genre && movie.Genre !== 'N/A' && (
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Genre</h3>
-                  <p className="text-gray-300">{movie.Genre}</p>
-                </div>
-              )}
-
-              {movie.Director && movie.Director !== 'N/A' && (
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Director</h3>
-                  <p className="text-gray-300">{movie.Director}</p>
-                </div>
-              )}
-
-              {movie.Actors && movie.Actors !== 'N/A' && (
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Cast</h3>
-                  <p className="text-gray-300">{movie.Actors}</p>
-                </div>
-              )}
-
-              {movie.Plot && movie.Plot !== 'N/A' && (
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Plot</h3>
-                  <p className="text-gray-300 leading-relaxed">{movie.Plot}</p>
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-4 mt-8">
-              <button 
-                onClick={handleFavoriteToggle}
-                className={`px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 ${
-                  isMovieFavorite
-                    ? 'bg-red-500 hover:bg-red-600 text-white'
-                    : 'bg-blue-500 hover:bg-blue-600 text-white'
-                }`}
-              >
-                <svg className="w-4 h-4" fill={isMovieFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                <span>{isMovieFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</span>
-              </button>
-              
-              <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-white/20">
-                Share Movie
-              </button>
-            </div>
+          <div className="flex justify-center mt-12">
+            <button
+              onClick={handleFavoriteToggle}
+              style={{
+                padding: '14px 32px',
+                borderRadius: '25px',
+                background: isMovieFavorite
+                  ? 'linear-gradient(90deg, #f43f5e, #a78bfa)'
+                  : 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                color: '#fff',
+                fontWeight: '600',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 8px 25px rgba(236,72,153,0.4)',
+                transition: 'all 0.3s ease-in-out',
+                fontSize: '16px',
+              }}
+            >
+              {isMovieFavorite ? '❤️ Remove from Favorites' : '🤍 Add to Favorites'}
+            </button>
           </div>
         </div>
       </div>

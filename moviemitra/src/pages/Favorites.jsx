@@ -48,7 +48,7 @@ const Favorites = () => {
                 background: 'rgba(15,23,42,0.6)',
                 color: '#fff',
                 fontWeight: '600',
-                border: '1px solid',
+                border: '0.5px solid',
                 borderImage: 'linear-gradient(45deg, #a78bfa, #f0abfc) 1',
                 boxShadow: '0 0 12px rgba(167,139,250,0.7), 0 0 25px rgba(240,171,252,0.5)',marginBottom: '0.8rem'
               }}

@@ -114,7 +114,7 @@ const MovieDetail = () => {
 
         <h1
           className="text-3xl lg:text-4xl font-bold text-white text-center"
-          style={{ marginTop: '2rem', marginBottom: '2rem' }}
+          style={{ color: '#C0A1D9',marginTop: '2rem', marginBottom: '2rem' }}
         >
           {movie.Title}
         </h1>
@@ -149,13 +149,13 @@ const MovieDetail = () => {
               <div className="space-y-3">
                 {movie.Year && (
                   <div>
-                    <span className="text-white font-extrabold">Date Released: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Date Released: </span>
                     <span className="text-white">{movie.Released || movie.Year}</span>
                   </div>
                 )}
                 {movie.imdbRating && movie.imdbRating !== 'N/A' && (
                   <div>
-                    <span className="text-white font-extrabold">Rating: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Rating: </span>
                     <span className="text-white">{movie.imdbRating}</span>
                     {movie.imdbVotes && movie.imdbVotes !== 'N/A' && (
                       <span className="text-gray-400 text-sm ml-2">({movie.imdbVotes} votes)</span>
@@ -167,19 +167,19 @@ const MovieDetail = () => {
               <div className="space-y-3">
                 {movie.Genre && (
                   <div>
-                    <span className="text-white font-extrabold">Genre: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Genre: </span>
                     <span className="text-white">{movie.Genre}</span>
                   </div>
                 )}
                 {movie.Runtime && (
                   <div>
-                    <span className="text-white font-extrabold">Runtime: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Runtime: </span>
                     <span className="text-white">{movie.Runtime}</span>
                   </div>
                 )}
                 {movie.Rated && (
                   <div>
-                    <span className="text-white font-extrabold">Rated: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Rated: </span>
                     <span className="text-white">{movie.Rated}</span>
                   </div>
                 )}
@@ -188,13 +188,13 @@ const MovieDetail = () => {
               <div className="space-y-3">
                 {movie.Director && (
                   <div>
-                    <span className="text-white font-extrabold">Director: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Director: </span>
                     <span className="text-white">{movie.Director}</span>
                   </div>
                 )}
                 {movie.Actors && (
                   <div>
-                    <span className="text-white font-extrabold">Cast: </span>
+                    <span className="text-white font-extrabold" style={{color: '#C0A1D9',fontSize:"16px",fontWeight:'bolder'}}>Cast: </span>
                     <span className="text-white">{movie.Actors}</span>
                   </div>
                 )}

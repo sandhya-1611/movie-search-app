@@ -1,4 +1,4 @@
-const API_KEY = 'cfb5ab0447e1f2ecc65fcb3b6ab23246';
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 

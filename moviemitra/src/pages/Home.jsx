@@ -11,7 +11,6 @@ import {
 import { searchMovies } from "../services/movieApi";
 import { useDebounce } from "../hooks/useDebounce";
 import { Link } from "react-router-dom";
-import Features from "../components/Features";
 import { Search, Filter, Heart, Smartphone } from "react-feather"; 
 
 const Home = () => {

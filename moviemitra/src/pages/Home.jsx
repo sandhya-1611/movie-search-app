@@ -224,37 +224,25 @@ const Home = () => {
   <section
     style={{
       width: "100%",
-      paddingTop: "1rem",   
-      paddingBottom: "60rem", 
+      paddingTop: "2rem",
+      paddingBottom: "4rem",  
     }}
   >
     <div className="max-w-6xl mx-auto px-6">
       <h2
-        className="text-center text-3xl font-bold mb-12"
+        className="text-center text-3xl font-bold mb-16"  
         style={{
           background: "linear-gradient(90deg, #a78bfa, #f0abfc)",
           WebkitBackgroundClip: "text",
           color: "transparent",
+          marginBottom: '2rem'
         }}
       >
         ✨ Why Choose MovieMitra
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 place-items-center" style={{
-      width: "100%",
-      paddingTop: "1rem",  
-      paddingBottom: "60rem", 
-    }}>
-
-        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-pink-500 
-                        shadow-[0_0_12px_rgba(236,72,153,0.7)] 
-                        p-6 flex flex-col items-center text-center 
-                        transition-all duration-300 
-                        hover:scale-[1.05] 
-                        hover:shadow-[0_0_25px_rgba(236,72,153,1)]" style={{
-            paddingTop: "1rem", 
-            paddingBottom: "1rem",
-          }}>
+      <div id="features-grid">
+        <div className="feature-card border-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.7)] hover:shadow-[0_0_25px_rgba(236,72,153,1)]">
           <div className="mb-4">
             <Search size={40} className="text-pink-500" />
           </div>
@@ -264,15 +252,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-cyan-500 
-                        shadow-[0_0_12px_rgba(34,211,238,0.7)] 
-                        p-6 flex flex-col items-center text-center 
-                        transition-all duration-300 
-                        hover:scale-[1.05] 
-                        hover:shadow-[0_0_25px_rgba(34,211,238,1)]"style={{
-            paddingTop: "1rem", 
-            paddingBottom: "1rem",
-          }}>
+        <div className="feature-card border-cyan-500 shadow-[0_0_12px_rgba(34,211,238,0.7)] hover:shadow-[0_0_25px_rgba(34,211,238,1)]">
           <div className="mb-4">
             <Filter size={40} className="text-cyan-500" />
           </div>
@@ -282,15 +262,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-rose-500 
-                        shadow-[0_0_12px_rgba(244,63,94,0.7)] 
-                        p-6 flex flex-col items-center text-center 
-                        transition-all duration-300 
-                        hover:scale-[1.05] 
-                        hover:shadow-[0_0_25px_rgba(244,63,94,1)]" style={{
-            paddingTop: "1rem", 
-            paddingBottom: "1rem",
-          }}>
+        <div className="feature-card border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.7)] hover:shadow-[0_0_25px_rgba(244,63,94,1)]">
           <div className="mb-4">
             <Heart size={40} className="text-rose-500" />
           </div>
@@ -300,15 +272,7 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-sm bg-[#0d1117] rounded-lg border-2 border-emerald-500 
-                        shadow-[0_0_12px_rgba(16,185,129,0.7)] 
-                        p-6 flex flex-col items-center text-center 
-                        transition-all duration-300 
-                        hover:scale-[1.05] 
-                        hover:shadow-[0_0_25px_rgba(16,185,129,1)]" style={{
-            paddingTop: "1rem", 
-            paddingBottom: "1rem",
-          }}>
+        <div className="feature-card border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.7)] hover:shadow-[0_0_25px_rgba(16,185,129,1)]">
           <div className="mb-4">
             <Smartphone size={40} className="text-emerald-500" />
           </div>
@@ -317,8 +281,33 @@ const Home = () => {
             Seamless experience across all devices - desktop, tablet, and mobile platforms.
           </p>
         </div>
-
       </div>
+
+      <style>{`
+        #features-grid {
+          display: grid;
+          grid-template-columns: 1fr;   
+          gap: 32px;   
+          padding: 0 40px; 
+        }
+        @media (min-width: 1024px) {
+          #features-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+          }
+        }
+
+        .feature-card {
+          background: #0d1117;
+          border-width: 2px;
+          border-radius: 12px;
+          padding: 20px;   
+          text-align: center;
+          transition: all .3s ease;
+        }
+        .feature-card:hover {
+          transform: scale(1.05);
+        }
+      `}</style>
     </div>
   </section>
 )}

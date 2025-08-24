@@ -1,26 +1,42 @@
-import React from 'react';
-import MovieCard from './MovieCard';
+import React from "react";
+import MovieCard from "./MovieCard";
+
+const GRID_ID = "mm-movie-grid";
 
 const MovieGrid = ({ movies, loading = false }) => {
-  console.log('Movies in grid:', movies);
-
-  const LoadingSkeleton = () => (
-    <div className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden border border-white/20 animate-pulse">
-      <div className="aspect-[2/3] bg-gray-600/50"></div>
-      <div className="p-4">
-        <div className="h-4 bg-gray-600/50 rounded mb-2"></div>
-        <div className="h-3 bg-gray-600/50 rounded w-1/2"></div>
+  const Skeleton = () => (
+    <div className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden border border-white/20 h-full">
+      <div style={{ width: "100%", paddingTop: "150%", background: "rgba(75,85,99,.5)" }} />
+      <div style={{ padding: 16 }}>
+        <div style={{ height: 16, background: "rgba(75,85,99,.5)", borderRadius: 6, marginBottom: 8 }} />
+        <div style={{ height: 12, width: "50%", background: "rgba(75,85,99,.5)", borderRadius: 6 }} />
       </div>
     </div>
   );
 
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-        {[...Array(10)].map((_, index) => (
-          <LoadingSkeleton key={index} />
-        ))}
-      </div>
+      <section style={{ width: "100%" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+          <div id={GRID_ID}>
+            {[...Array(8)].map((_, i) => <Skeleton key={i} />)}
+          </div>
+        </div>
+
+        <style>{`
+          #${GRID_ID} {
+            display: grid;
+            grid-template-columns: 1fr;              /* mobile: 1 per row */
+            gap: 24px;                               /* horizontal + vertical space */
+            padding: 0 16px;                         /* side gutters */
+          }
+          @media (min-width: 1024px) {
+            #${GRID_ID} {
+              grid-template-columns: repeat(4, minmax(0, 1fr));  /* desktop: 4 per row */
+            }
+          }
+        `}</style>
+      </section>
     );
   }
 
@@ -35,24 +51,29 @@ const MovieGrid = ({ movies, loading = false }) => {
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-        {movies.map((movie, index) => {
-
-          if (!movie) {
-            console.warn('Empty movie at index:', index);
-            return null;
-          }
-          
-          return (
-            <MovieCard 
-              key={movie.imdbID || `movie-${index}`} 
-              movie={movie} 
-            />
-          );
-        })}
+    <section style={{ width: "100%" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+        <div id={GRID_ID}>
+          {movies.map((movie, idx) => movie ? (
+            <MovieCard key={movie.imdbID || `movie-${idx}`} movie={movie} />
+          ) : null)}
+        </div>
       </div>
-    </div>
+
+      <style>{`
+        #${GRID_ID} {
+          display: grid;
+          grid-template-columns: 1fr;              
+          gap: 24px;                            
+          padding: 0 16px;                    
+        }
+        @media (min-width: 1024px) {
+          #${GRID_ID} {
+            grid-template-columns: repeat(4, minmax(0, 1fr)); 
+          }
+        }
+      `}</style>
+    </section>
   );
 };
 

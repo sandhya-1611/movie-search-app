@@ -1,102 +1,139 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useFavoritesContext } from '../context/FavoritesContext';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useFavoritesContext } from "../context/FavoritesContext";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavoritesContext();
-  
+
   const {
-    Title: title = 'Movie Title',
-    Year: year = 'N/A',
+    Title: title = "Movie Title",
+    Year: year = "N/A",
     Poster: poster = null,
-    imdbID = '',
-    Type: type = 'movie'
+    imdbID = "",
+    Type: type = "movie",
   } = movie;
 
-  const posterUrl = poster && poster !== 'N/A' 
-    ? poster 
-    : 'https://via.placeholder.com/300x450/374151/9ca3af?text=No+Poster+Available';
+  const posterUrl =
+    poster && poster !== "N/A"
+      ? poster
+      : "https://via.placeholder.com/300x450/374151/9ca3af?text=No+Poster+Available";
 
   const isMovieFavorite = isFavorite(imdbID);
 
-  const handleCardClick = () => {
-    if (imdbID) {
-      navigate(`/movie/${imdbID}`);
-    }
-  };
-
-  const handleFavoriteClick = (e) => {
-    e.stopPropagation(); 
-    toggleFavorite(movie);
-  };
-
-  const handleImageError = (e) => {
-    e.target.src = 'https://via.placeholder.com/300x450/374151/9ca3af?text=Image+Not+Found';
-  };
+  const handleCardClick = () => imdbID && navigate(`/movie/${imdbID}`);
+  const handleFavoriteClick = (e) => { e.stopPropagation(); toggleFavorite(movie); };
+  const handleImageError = (e) => { e.target.src = "https://via.placeholder.com/300x450/374151/9ca3af?text=Image+Not+Found"; };
 
   return (
-    <div 
-      className="group cursor-pointer transform transition-all duration-300 hover:scale-105"
-      onClick={handleCardClick}
-    >
-      <div className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden border border-white/20 hover:border-blue-400/50 hover:shadow-xl hover:shadow-blue-400/20 min-h-[400px] flex flex-col">
-
-        <div className="relative aspect-[2/3] overflow-hidden flex-shrink-0">
+    <div onClick={handleCardClick} style={{ height: "100%" }}>
+      <div
+        className="movie-card"
+        style={{
+          height: "100%",                              
+          background: "rgba(255,255,255,0.08)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderRadius: 12,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          transition: "transform .2s ease, box-shadow .2s ease, border-color .2s ease",
+        }}
+      >
+        <div style={{ position: "relative", width: "100%", paddingTop: "150%" }}>
           <img
             src={posterUrl}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-            loading="lazy"
             onError={handleImageError}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transition: "transform .3s ease",
+            }}
           />
-
           <button
             onClick={handleFavoriteClick}
-            className={`absolute top-2 left-2 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
-              isMovieFavorite 
-                ? 'bg-red-500/80 text-white scale-110' 
-                : 'bg-black/50 text-gray-300 hover:bg-red-500/80 hover:text-white'
-            }`}
+            style={{
+              position: "absolute",
+              top: 8,
+              left: 8,
+              padding: 8,
+              borderRadius: 9999,
+              backdropFilter: "blur(6px)",
+              background: isMovieFavorite ? "rgba(239,68,68,.85)" : "rgba(0,0,0,.5)",
+              color: isMovieFavorite ? "#fff" : "#d1d5db",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
-            <svg className="w-4 h-4" fill={isMovieFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
+            ♥
           </button>
+          <div
+            style={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              background: "rgba(59,130,246,.85)",
+              color: "#fff",
+              fontSize: 12,
+              padding: "2px 8px",
+              borderRadius: 9999,
+              textTransform: "uppercase",
+              fontWeight: 600,
+            }}
+          >
+            {type}
+          </div>
 
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+          <div className="card-overlay" style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: 0,
+            transition: "opacity .3s ease"
+          }}>
+            <button
+              style={{
+                background: "#3b82f6",
+                color: "#fff",
+                padding: "8px 14px",
+                borderRadius: 10,
+                border: "none",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
               View Details
             </button>
           </div>
-
-          <div className="absolute top-2 right-2">
-            <span className="bg-blue-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full uppercase font-medium">
-              {type}
-            </span>
-          </div>
         </div>
 
-        <div className="p-4 flex-grow flex flex-col justify-between">
-          <div>
-            <h3 className="text-white font-semibold text-lg mb-2 leading-tight group-hover:text-blue-300 transition-colors duration-200">
-              {title}
-            </h3>
-          </div>
-          
-          <div className="flex items-center justify-between mt-auto">
-            <span className="text-gray-300 text-sm font-medium">
-              📅 {year}
-            </span>
-            
+        <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, flexGrow: 1 }}>
+          <h3 style={{ color: "#fff", fontWeight: 600, fontSize: 18, lineHeight: 1.2, margin: 0 }}>
+            {title}
+          </h3>
+          <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ color: "#d1d5db", fontSize: 14, fontWeight: 500 }}>📅 {year}</span>
             {isMovieFavorite && (
-              <span className="text-red-400 text-xs font-medium bg-red-500/20 px-2 py-1 rounded">
+              <span style={{ color: "#f87171", fontSize: 12, fontWeight: 600, background: "rgba(239,68,68,.2)", padding: "2px 8px", borderRadius: 6 }}>
                 ❤️ Favorite
               </span>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        .movie-card:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(59,130,246,.25); border-color: rgba(96,165,250,.6); }
+        .movie-card:hover img { transform: scale(1.06); }
+        .movie-card:hover .card-overlay { opacity: 1; }
+      `}</style>
     </div>
   );
 };

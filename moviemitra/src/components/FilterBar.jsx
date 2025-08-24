@@ -72,25 +72,32 @@ export default function FilterBar({ filters, onFiltersChange, onClearFilters }) 
         </select>
 
         <select
-          value={filters.ratings || ""}
-          onChange={(e) =>
-            onFiltersChange({ ...filters, ratings: e.target.value })
-          }
-          style={{ ...dropdownStyle, color: "#fde68a" }} 
-          onMouseOver={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
-          onMouseOut={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })}
-          onFocus={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
-          onBlur={(e) => Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })}
-        >
-          <option value="">All Ratings</option>
-          <option value="9">9+ ⭐</option>
-          <option value="8">8+ ⭐</option>
-          <option value="7">7+ ⭐</option>
-          <option value="6">6+ ⭐</option>
-          <option value="5">5+ ⭐</option>
-          <option value="4">4+ ⭐</option>
-          <option value="3">3+ ⭐</option>
-        </select>
+        value={filters.ratings || ""}
+        onChange={(e) =>
+          onFiltersChange({ 
+            ...filters, 
+            ratings: e.target.value ? parseFloat(e.target.value) : "" 
+          })
+        }
+        style={{ ...dropdownStyle, color: "#fde68a" }} 
+        onMouseOver={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+        onMouseOut={(e) =>
+          Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })
+        }
+        onFocus={(e) => Object.assign(e.target.style, dropdownHoverFocus)}
+        onBlur={(e) =>
+          Object.assign(e.target.style, { ...dropdownStyle, color: "#fde68a" })
+        }
+      >
+        <option value="">All Ratings</option>
+        <option value="9">9+ ⭐</option>
+        <option value="8">8+ ⭐</option>
+        <option value="7">7+ ⭐</option>
+        <option value="6">6+ ⭐</option>
+        <option value="5">5+ ⭐</option>
+        <option value="4">4+ ⭐</option>
+        <option value="3">3+ ⭐</option>
+      </select>
 
         <select
           value={filters.sortBy}

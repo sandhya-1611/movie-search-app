@@ -44,7 +44,7 @@ const Header = () => {
             className="text-gray-300 hover:text-blue-400 transition font-medium text-xs flex items-center"
           >
             <span style={{ marginRight: '4px' }}>❤️</span>
-            Fav
+            Favorites
           </Link>
         </nav>
 

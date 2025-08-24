@@ -49,15 +49,19 @@ const Home = () => {
 
       if (result.success) {
         let fetchedMovies = result.movies;
+      if (currentFilters.ratings) {
+        const ratingValue = parseFloat(currentFilters.ratings);
 
-        if (currentFilters.ratings) {
-  const ratingValue = parseInt(currentFilters.ratings);
-  fetchedMovies = fetchedMovies.filter((movie) => {
-    const rating = parseFloat(movie.imdbRating);
-    return isNaN(rating) || rating >= ratingValue;
+        fetchedMovies = fetchedMovies.filter((movie) => {
+          const rawRating = movie.imdbRating || "";
+          const match = String(rawRating).match(/[\d.]+/);
+          if (!match) return true; 
+          const numericRating = parseFloat(match[0]);
+          return numericRating >= ratingValue;
+        });
+      }
 
-  });
-}
+
 
         if (currentFilters.sortBy === "yearAsc") {
           fetchedMovies.sort((a, b) => parseInt(a.Year) - parseInt(b.Year));
@@ -169,7 +173,7 @@ const Home = () => {
               <div className="flex flex-col items-center justify-center mb-12">
                 <Link to="/" className="flex items-center space-x-2 animate-pulse">
                   <span className="text-9xl">🎬</span>
-                  <h1 className="text-4xl md:text-5xl font-extrabold tracking-wide font-sans text-white">
+                  <h1 className="text-18xl md:text-5xl font-extrabold tracking-wide font-sans text-white">
                     Movie<span className="text-blue-500">Mitra</span>
                   </h1>
                 </Link>
@@ -180,12 +184,12 @@ const Home = () => {
               >
                 Discover Your Next
               </h1>
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-8 bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent"style={{ color: "#C0A1D9",marginBottom:'1rem' }}>
                 Favorite Movie
               </h2>
               <p
                 className="text-xxl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
-                style={{ color: "#E9D8FD" }}
+                style={{ color: "#E9D8FD",marginBottom:'1rem' }}
               >
                 Search thousands of movies and TV shows, filter by your
                 preferences, and save your favorites

@@ -4,7 +4,8 @@ import { useFavoritesContext } from '../context/FavoritesContext';
 import MovieGrid from '../components/MovieGrid';
 
 const Favorites = () => {
-  const { favorites, removeFromFavorites } = useFavoritesContext();
+  const { favorites, removeFromFavorites, clearFavorites } = useFavoritesContext();
+
 
   const handleRemoveFromFavorites = (imdbID) => {
     removeFromFavorites(imdbID);
@@ -61,42 +62,27 @@ const Favorites = () => {
         {favorites.length > 0 && (
           <div className="mb-12 flex justify-center">
             <button
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'Are you sure you want to remove all favorites?'
-                  )
-                ) {
-                  favorites.forEach((movie) => removeFromFavorites(movie.imdbID));
-                }
-              }}
-              style={{
-                padding: '12px 28px',
-                borderRadius: '20px',
-                background:
-                  'linear-gradient(90deg, #ec4899, #8b5cf6)',
-                color: '#fff',
-                fontWeight: '600',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(236,72,153,0.5)',
-                transition: 'all 0.2s ease-in-out', marginBottom: '1rem'
-              }}
-              onMouseOver={(e) =>
-                Object.assign(e.target.style, {
-                  transform: 'scale(1.05)',
-                  boxShadow: '0 6px 25px rgba(236,72,153,0.7)',
-                })
-              }
-              onMouseOut={(e) =>
-                Object.assign(e.target.style, {
-                  transform: 'scale(1)',
-                  boxShadow: '0 4px 15px rgba(236,72,153,0.5)',
-                })
-              }
-            >
-              Clear All Favorites
-            </button>
+  onClick={() => {
+    if (window.confirm('Are you sure you want to remove all favorites?')) {
+      clearFavorites(); 
+    }
+  }}
+  style={{
+    padding: '12px 28px',
+    borderRadius: '20px',
+    background: 'linear-gradient(90deg, #ec4899, #8b5cf6)',
+    color: '#fff',
+    fontWeight: '600',
+    border: 'none',
+    cursor: 'pointer',
+    boxShadow: '0 4px 15px rgba(236,72,153,0.5)',
+    transition: 'all 0.2s ease-in-out',
+    marginBottom: '1rem'
+  }}
+>
+  Clear All Favorites
+</button>
+
           </div>
         )}
 
